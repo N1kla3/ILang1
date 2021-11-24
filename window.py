@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QFileDialog, QMainWindow
 from PyQt5 import QtWidgets
 from PyQt5 import uic
 from Help import Help
+from Statistics import Statistics
 from WFile import WFile
 from calculations import get_files_list, get_folders_content, eq_rating, sort_key
 
@@ -21,6 +22,7 @@ class SearchWindow(QMainWindow):
         self.b_file = False
         self.b_dir = False
         self.actionhelp.triggered.connect(self.help_clicked)
+        self.metric.clicked.connect(self.stat_clicked)
         self.btn_add_ip.clicked.connect(self.openFileNameDialog)
         self.btn_directory_dialog.clicked.connect(self.openDirectoryDialog)
 
@@ -52,6 +54,10 @@ class SearchWindow(QMainWindow):
         self.b_dir = True
         self.folder_path = QFileDialog.getExistingDirectory(self)
         #self.plainTextEdit_result.insertPlainText(self.folder_path)
+
+    def stat_clicked(self):
+        dd = Statistics(self)
+        dd.show()
 
 
 if __name__ == '__main__':
