@@ -19,21 +19,26 @@ class SearchWindow(QMainWindow):
         self.folder_path = ''
         self.file_path = ''
         self.search_string = ''
+        self.database_path = ''
         self.b_file = False
         self.b_dir = False
         self.actionhelp.triggered.connect(self.help_clicked)
+        self.database.clicked.connect(self.database_clicked)
         self.metric.clicked.connect(self.stat_clicked)
         self.btn_add_ip.clicked.connect(self.openFileNameDialog)
         self.btn_directory_dialog.clicked.connect(self.openDirectoryDialog)
 
     def btn_search_clicked(self):
         search_str = self.textEdit_search.toPlainText()
+        database_files = get_files_list(get_folders_content(self.database_path))
         if self.b_file:
             one_file = WFile(self.file_path)
-            eq_rating([one_file], search_str)
+            files = [one_file] + database_files
+            eq_rating(files, search_str)
             self.plainTextEdit_result.insertPlainText(f'{one_file.path} - {one_file.eq_rate}\n')
         elif self.b_dir:
             files = get_files_list(get_folders_content(self.folder_path))
+            files = files + database_files
             eq_rating(files, search_str)
             result = [[file.path, file.eq_rate] for file in sorted(files, key=sort_key, reverse=True)]
             for file in files:
@@ -54,6 +59,10 @@ class SearchWindow(QMainWindow):
         self.b_dir = True
         self.folder_path = QFileDialog.getExistingDirectory(self)
         #self.plainTextEdit_result.insertPlainText(self.folder_path)
+
+    def database_clicked(self):
+        self.database_path = QFileDialog.getExistingDirectory(self)
+
 
     def stat_clicked(self):
         dd = Statistics(self)
